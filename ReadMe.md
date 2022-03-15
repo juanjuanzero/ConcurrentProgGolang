@@ -470,3 +470,5 @@ func main() {
 ```
 
 We created two new channels, and modified our two goroutines, to be senders to the cache channel and the db channel. Then we added a third goroutine that will act as a receiver of messages from that channel. We used the select statement to coordinate actions from either the db or the cache and print it to the appropriate output.
+
+Notice how in the cache case we throw read from the db? This is because in the for loop (and within the WaitGroup) there is actually two calls happening, a call to the cache and a call to the db. If the item is in the cache, then we dont need the dbItem (so we throw it out), if the item is not in the cache, we have to go into the db where we also populate the cache.
